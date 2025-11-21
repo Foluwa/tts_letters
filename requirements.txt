@@ -10,10 +10,23 @@ numpy>=1.24.0,<2.0.0
 # Audio validation with faster-whisper
 faster-whisper>=1.0.0
 
-# Voice cloning (optional - for generate_voice_cloning.py)
-torch>=2.0.0,<2.6
-torchaudio>=2.0.0,<2.6
-TTS>=0.14.0,<0.22.0
-
 # Environment config
 python-dotenv>=1.0.0
+
+# =============================================================================
+# OPTIONAL: Voice cloning with XTTS (generate_voice_cloning.py)
+# =============================================================================
+# NOTE: TTS (Coqui) requires Python 3.9-3.11 (NOT compatible with Python 3.12+)
+# 
+# If you're on Python 3.12+, you have two options:
+#   1. Use pyenv/conda to install Python 3.11
+#   2. Skip voice cloning (gTTS + Piper work on any Python version)
+#
+# To install voice cloning dependencies (Python 3.9-3.11 only):
+#   pip install torch>=2.0.0,<2.6 torchaudio>=2.0.0,<2.6 TTS>=0.14.0,<0.22.0
+#
+# Uncomment these lines if you have Python 3.9-3.11:
+# torch>=2.0.0,<2.6
+# torchaudio>=2.0.0,<2.6
+# TTS>=0.14.0,<0.22.0
+# =============================================================================

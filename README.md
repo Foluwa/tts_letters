@@ -1,5 +1,3 @@
-"""Main README with setup and usage instructions."""
-
 # TTS Letters: A-Z Pronunciation Synthesis Framework
 
 Generate synthetic speech pronunciations for A-Z letters across multiple English accents using modular TTS backends.
@@ -23,10 +21,26 @@ Generate synthetic speech pronunciations for A-Z letters across multiple English
 
 ### Installation
 
+**Python 3.12+ (Server/Production):**
 ```bash
-# Complete setup (creates venv + installs dependencies)
+# Core functionality only (gTTS, Piper, eSpeak-ng)
 make setup
+
+# This installs everything except voice cloning
+# Voice cloning requires Python 3.9-3.11 (see below)
 ```
+
+**Python 3.9-3.11 (For voice cloning):**
+```bash
+# Full installation with voice cloning support
+make setup
+
+# Then manually install voice cloning dependencies:
+source venv/bin/activate
+pip install torch>=2.0.0,<2.6 torchaudio>=2.0.0,<2.6 TTS>=0.14.0,<0.22.0
+```
+
+> **Note:** TTS (Coqui) for voice cloning requires Python 3.9-3.11. If you're on Python 3.12+, you can still use gTTS, Piper, and eSpeak-ng (the core engines).
 
 ### Usage
 
@@ -34,12 +48,14 @@ Everything is simplified through the Makefile. Just run:
 
 ```bash
 # Generate audio (Google TTS - fastest, ~260 files)
+# ✅ Works on Python 3.9-3.12+
 make generate
 
 # Generate with all engines (~500+ files, takes longer)
+# ✅ Works on Python 3.9-3.12+ (skips voice cloning on 3.12+)
 make generate-all
 
-# Voice cloning with XTTS
+# Voice cloning with XTTS (requires Python 3.9-3.11 only)
 make references          # Create reference samples first
 make generate-cloning    # Then generate
 
