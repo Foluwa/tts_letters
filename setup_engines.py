@@ -22,8 +22,9 @@ class EngineSetup:
     """Setup and verify TTS engines"""
     
     def __init__(self):
-        self.venv_bin = Path("venv/bin")
-        self.venv_python = self.venv_bin / "python3"
+        # Use current Python interpreter (works in venv or system Python)
+        self.python = sys.executable
+        self.venv_bin = Path("venv/bin")  # Still used for piper executable path
         self.models_dir = Path("models")
         self.models_dir.mkdir(exist_ok=True)
     
@@ -48,7 +49,7 @@ class EngineSetup:
         
         try:
             result = subprocess.run(
-                [str(self.venv_python), "-c", "import gtts"],
+                [self.python, "-c", "import gtts"],
                 capture_output=True,
                 text=True,
                 timeout=5
@@ -70,7 +71,7 @@ class EngineSetup:
         
         try:
             result = subprocess.run(
-                [str(self.venv_python), "-m", "pip", "install", "gtts"],
+                [self.python, "-m", "pip", "install", "gtts"],
                 capture_output=True,
                 text=True,
                 timeout=60
@@ -124,7 +125,7 @@ class EngineSetup:
         try:
             # Try installing piper-tts package
             result = subprocess.run(
-                [str(self.venv_python), "-m", "pip", "install", "piper-tts"],
+                [self.python, "-m", "pip", "install", "piper-tts"],
                 capture_output=True,
                 text=True,
                 timeout=120
