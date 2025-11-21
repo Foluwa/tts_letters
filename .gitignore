@@ -1,0 +1,64 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs
+*.log
+logs/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Generated files and reports
+outputs/**/*.wav
+outputs/**/*.mp3
+references/*.wav
+test_*.json
+validation_report.json
+audio_quality_report.json
+generation_metadata*.json
+*_report.json
+
+# Keep directory structure
+!outputs/
+!outputs/*/
+!references/
+!logs/
+
+# Model caches
+.cache/
+models/cache/
+
+# Python virtual environment
+venv/
+.venv/
+env/
+
+# Environment variables (DO NOT COMMIT)
+.env
