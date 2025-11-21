@@ -4,7 +4,8 @@
 
 PYTHON_VERSION := 3.11
 VENV_DIR := venv
-PYTHON := $(VENV_DIR)/bin/python3
+# Use system Python if in Colab, otherwise use venv
+PYTHON := $(shell if [ -d "$(VENV_DIR)" ] && [ -f "$(VENV_DIR)/bin/python3" ]; then echo "$(VENV_DIR)/bin/python3"; else echo "python3"; fi)
 UV := uv
 
 help:
@@ -12,11 +13,12 @@ help:
 	@echo "=============================="
 	@echo ""
 	@echo "🚀 Setup:"
-	@echo "  make setup          - Complete setup (venv + dependencies)"
+	@echo "  make setup          - Complete setup (venv + dependencies) [LOCAL]"
+	@echo "  make setup-colab    - Setup for Google Colab (no venv) [COLAB]"
 	@echo "  make check-engines  - Check/install TTS engines"
 	@echo "  make venv           - Create venv only"
-	@echo "  make install        - Install dependencies (uv)"
-	@echo "  make install-pip    - Install dependencies (pip)"
+	@echo "  make install        - Install dependencies (auto-detect uv/pip)"
+	@echo "  make install-pip    - Install dependencies (pip only)"
 	@echo ""
 	@echo "🎙️  Generate Audio:"
 	@echo "  make generate       - Quick generation (Google TTS only, ~260 files)"
@@ -52,22 +54,33 @@ venv:
 	@echo "Activate with: source $(VENV_DIR)/bin/activate"
 
 install:
-	@echo "Installing dependencies with uv..."
-	$(UV) pip install -r requirements.txt
+	@echo "Installing dependencies..."
+	@if command -v uv >/dev/null 2>&1; then \
+		echo "Using uv..."; \
+		$(UV) pip install -r requirements.txt; \
+	else \
+		echo "Using pip..."; \
+		$(PYTHON) -m pip install --upgrade pip 2>/dev/null || true; \
+		$(PYTHON) -m pip install -r requirements.txt; \
+	fi
 	@echo "✓ Dependencies installed"
 
 install-pip:
-	@echo "Installing dependencies with pip (fallback)..."
-	$(PYTHON) -m pip install --upgrade pip setuptools wheel
+	@echo "Installing dependencies with pip..."
+	$(PYTHON) -m pip install --upgrade pip setuptools wheel 2>/dev/null || true
 	$(PYTHON) -m pip install -r requirements.txt
 	@echo "✓ Dependencies installed"
 
-lock:
-	@echo "Generating uv.lock from requirements.txt..."
-	$(UV) pip compile requirements.txt -o uv.lock
-	@echo "✓ uv.lock updated"
+setup-colab: install
+	@echo "✓ Setup complete for Google Colab!"
+	@echo ""
+	@echo "Checking TTS engines..."
+	$(PYTHON) setup_engines.py
+	@echo ""
+	@echo "Test engines: make test-engines"
+	@echo "Generate audio: make generate"
 
-setup: venv install lock
+setup: venv install
 	@echo "✓ Setup complete!"
 	@echo ""
 	@echo "Checking TTS engines..."
